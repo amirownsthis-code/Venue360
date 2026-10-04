@@ -39,8 +39,13 @@
     {% if featured_events %}
     <div class="events-grid">
         {% for event in featured_events %}
-        <div class="event-card" style="cursor: pointer;" onclick="openEventDetails({{ event|tojson }}, false, {{ 'true' if session.get('student_id') or session.get('admin_id') else 'false' }})">
-            <div class="card-poster" style="background-image: url('/static/images/{{ event.image or 'club.jpeg' }}');">
+        {% set event_image = event.image or 'club.jpeg' %}
+        <div class="event-card"
+             style="cursor: pointer;"
+             data-event="{{ event|tojson|forceescape }}"
+             data-logged-in="{{ 'true' if session.get('student_id') or session.get('admin_id') else 'false' }}"
+             onclick="openEventDetails(JSON.parse(this.dataset.event), false, this.dataset.loggedIn === 'true')">
+            <div class="card-poster" style="background-image: url('/static/images/{{ event_image }}');">
                 <div class="card-poster-overlay"></div>
             </div>
 
@@ -79,3 +84,4 @@
     {% endif %}
 </section>
 {% endblock %}
+
