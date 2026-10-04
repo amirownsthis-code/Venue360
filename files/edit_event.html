@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Event | Admin - Venue360</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_event.css') }}">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Venue<span>360</span></div>
+    <div class="nav-links">
+        <a href="{{ url_for('admin_dashboard') }}">Home</a>
+        <a href="{{ url_for('add_event') }}">Add event </a>
+        <a href="{{ url_for('manage_events') }}" class="active">Manage Events</a>
+        <a href="{{ url_for('view_registrations') }}">View Registrations</a>
+        <a href="{{ url_for('index') }}">Logout</a>
+    </div>
+</nav>
+
+<!-- HERO / PAGE WRAPPER -->
+<div class="hero">
+    <div class="form-container">
+        <h1>Edit Event</h1>
+        <p>Update the details of the event below</p>
+
+        <!-- Backend-ready form -->
+        <form method="POST" action="/admin/edit-event/{{ event.id }}">
+            <div class="form-grid">
+
+                <div>
+                    <label>Event Title</label>
+                    <input type="text" name="title" value="{{ event.title }}" required>
+                </div>
+
+                <div>
+                    <label>Organizing Society</label>
+                    <input type="text" name="society" value="{{ event.society }}" required>
+                </div>
+
+                <div>
+                    <label>Event Date</label>
+                    <input type="date" name="date" value="{{ event.date }}" required>
+                </div>
+
+                <div>
+                    <label>Event Time</label>
+                    <input type="time" name="time" value="{{ event.time }}" required>
+                </div>
+
+                <div>
+                    <label>Venue</label>
+                    <input type="text" name="venue" value="{{ event.venue }}" required>
+                </div>
+
+                <div>
+                    <label>Event Type</label>
+                    <input type="text" name="type" value="{{ event.type }}" required>
+                </div>
+
+                <div class="full-width">
+                    <label>Event Description</label>
+                    <textarea name="description" required>{{ event.description }}</textarea>
+                </div>
+
+                <div class="full-width">
+                    <label>Google Form Registration Link</label>
+                    <input type="url" name="google_form_link" value="{{ event.google_form_link }}" required>
+                </div>
+
+                <div class="full-width center">
+                    <button type="submit">Update Event</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Venue360{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 2rem 0;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <span class="badge badge-default" style="margin-bottom: 1rem; padding: 0.4rem 1rem;">Platform Overview</span>
+        <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--text-main);">
+            Empowering Campus Life with <span>Venue360</span>
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 1rem auto 0 auto;">
+            The central digital infrastructure built to streamline university events, student society engagement, and registration tracking.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.75rem;">
+            <div class="stat-icon" style="margin-bottom: 1rem;"><i class="fa-solid fa-bullseye"></i></div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Our Purpose</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Eliminating fragmented notice boards and scattered social media posts. Venue360 brings every seminar, tournament, drama show, and workshop into a single unified dashboard.
+            </p>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.75rem;">
+            <div class="stat-icon" style="margin-bottom: 1rem; background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);"><i class="fa-solid fa-bolt"></i></div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Seamless Registration</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Students can register for events in seconds with immediate integration into Google Forms and personal registration rosters, tracking all past and upcoming activities.
+            </p>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.75rem;">
+            <div class="stat-icon" style="margin-bottom: 1rem; background: rgba(245, 158, 11, 0.15); color: var(--accent-amber);"><i class="fa-solid fa-shield-cat"></i></div>
+            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Admin Oversight</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Empowers university administrators and society heads to post events, manage details, and analyze student registration data with ease.
+            </p>
+        </div>
+    </div>
+
+    {% if societies %}
+    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 2rem; text-align: center;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">
+            <i class="fa-solid fa-users" style="color: var(--accent-secondary);"></i> Active Student Societies
+        </h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1rem;">
+            {% for s in societies %}
+                <span class="badge badge-poetry" style="font-size: 0.85rem; padding: 0.4rem 0.9rem;">
+                    <i class="fa-solid fa-star"></i> {{ s }}
+                </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

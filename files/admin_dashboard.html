@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Venue360</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Venue<span>360</span></div>
+    <div class="nav-links">
+    <a href="{{ url_for('admin_dashboard') }}">Home</a>
+    <a href="{{ url_for('add_event') }}">Add Event</a>
+    <a href="{{ url_for('manage_events') }}">Manage Events</a>
+    <a href="{{ url_for('view_registrations') }}" class="active">View Registrations</a>
+    <a href="{{ url_for('index') }}">Logout</a>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<header class="hero">
+    <div class="hero-content">
+        <h1>Welcome, <span>Admin</span></h1>
+        <p>Manage university events, registrations, and student activities from here.</p>
+    </div>
+</header>
+
+<!-- ADMIN FUNCTIONALITIES CARDS -->
+<section class="features">
+    <div class="card">
+        <div class="card-icon">➕</div>
+        <h3>Add Event</h3>
+        <p>Create new events and link Google Forms for registration. Specify date, time, venue, and description.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🛠️</div>
+        <h3>Manage Events</h3>
+        <p>Edit, update, or delete existing events. Keep event information accurate and up-to-date for students.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📋</div>
+        <h3>View Registrations</h3>
+        <p>Check which students have registered for each event. Export or analyze registration data as needed.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Reports & Stats</h3>
+        <p>Track event participation, monitor popular events, and generate simple statistics for admin review.</p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 Venue360 — All Rights Reserved</p>
+    <p>Home | Add Event | Manage Events | View Registrations | Logout</p>
+</footer>
+
+</body>
+</html>

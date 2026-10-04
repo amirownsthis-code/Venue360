@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Venue360</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Venue<span>360</span></div>
+    <div class="nav-links">
+        <a href="{{ url_for('student_dashboard') }}" class="active">Home</a>
+        <a href="{{ url_for('view_events') }}">View Events</a>
+        <a href="{{ url_for('registered_events') }}">Registered Events</a>
+        <a href="{{ url_for('index') }}">Logout</a>
+
+        
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<header class="hero">
+    <div class="hero-content">
+        <h1>Welcome, <span>Student</span></h1>
+        <p>Explore and register for university events, join clubs, and manage your participation from here.</p>
+    </div>
+</header>
+
+<!-- STUDENT FUNCTIONALITIES CARDS -->
+<section class="features">
+    <div class="card">
+        <div class="card-icon">🎉</div>
+        <h3>View Events</h3>
+        <p>See all upcoming university events with details like date, time, venue, and organizing society.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📝</div>
+        <h3>Register Events</h3>
+        <p>Click to register for events via Google Forms linked by the admin. Keep track of your registrations.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📂</div>
+        <h3>My Registered Events</h3>
+        <p>Check all the events you have registered for, with easy access to links and details.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Join Clubs</h3>
+        <p>Participate in student clubs and societies, stay updated with club activities and workshops.</p>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 Venue360 — All Rights Reserved</p>
+    <p>Home | View Events | My Events | Join Clubs | Logout</p>
+</footer>
+
+</body>
+</html>

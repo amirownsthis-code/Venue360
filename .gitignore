@@ -1,0 +1,23 @@
+# Python environments and generated files
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Runtime account, event and registration data
+/data/admins.json
+/data/students.json
+/data/events.json
+/data/registrations.json
+
+# Logs and operating-system metadata
+*.log
+Thumbs.db
+.DS_Store
+

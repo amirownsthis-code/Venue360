@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Venue360 - University Events{% endblock %}
+
+{% block content %}
+<!-- CINEMATIC HERO SECTION -->
+<section class="hero-section">
+    <h1 class="hero-title">
+        DISCOVER <span>CAMPUS EVENTS</span>,<br> COMPETITIONS & WORKSHOPS.
+    </h1>
+
+    <p class="hero-subtitle">
+        Explore all upcoming university activities, literary sessions, e-sports tournaments, and stage dramas in one central platform.
+    </p>
+
+    <div class="hero-actions">
+        {% if session.get('student_id') %}
+            <a href="{{ url_for('student_portal') }}?tab=events" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 1.8rem;"><i class="fa-solid fa-play"></i> Explore Events</a>
+            <a href="{{ url_for('student_portal') }}?tab=registrations" class="btn btn-secondary" style="font-size: 1.1rem; padding: 0.8rem 1.8rem;"><i class="fa-solid fa-ticket"></i> My Registrations</a>
+        {% elif session.get('admin_id') %}
+            <a href="{{ url_for('admin_portal') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 1.8rem;"><i class="fa-solid fa-dashboard"></i> Admin Workspace</a>
+        {% else %}
+            <button onclick="openModal('authModal'); toggleAuthMode('register')" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 1.8rem;">
+                Get Started <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button onclick="openModal('authModal'); toggleAuthMode('login')" class="btn btn-secondary" style="font-size: 1.1rem; padding: 0.8rem 1.8rem;">
+                Sign In
+            </button>
+        {% endif %}
+    </div>
+</section>
+
+<!-- FEATURED EVENTS SECTION -->
+<section style="margin-top: 2rem;">
+    <div class="section-header">
+        <h2 class="section-title">Upcoming Campus Events</h2>
+    </div>
+
+    {% if featured_events %}
+    <div class="events-grid">
+        {% for event in featured_events %}
+        <div class="event-card" style="cursor: pointer;" onclick="openEventDetails({{ event|tojson }}, false, {{ 'true' if session.get('student_id') or session.get('admin_id') else 'false' }})">
+            <div class="card-poster" style="background-image: url('/static/images/{{ event.image or 'club.jpeg' }}');">
+                <div class="card-poster-overlay"></div>
+            </div>
+
+            <div class="card-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-society">{{ event.society }}</span>
+                    {% if event.fee_type == 'Paid' and event.price != 'Free' %}
+                        <span class="badge badge-paid">PKR {{ event.price }}</span>
+                    {% else %}
+                        <span class="badge badge-free">FREE</span>
+                    {% endif %}
+                </div>
+
+                <h3 class="event-title-text" style="margin-top: 0.4rem;">
+                    {{ event.title }}
+                </h3>
+
+                <div class="event-meta">
+                    <div class="event-meta-item">
+                        <i class="fa-regular fa-calendar" style="color: var(--accent-red);"></i>
+                        <span>{{ event.date }} at {{ event.time }}</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; padding-top: 0.5rem;">
+                    <button type="button" class="btn btn-secondary btn-sm" style="width: 100%;">
+                        View Details & Register
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align: center; color: var(--text-muted); padding: 3rem 0;">No active events listed.</p>
+    {% endif %}
+</section>
+{% endblock %}

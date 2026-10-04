@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Registrations | Admin - Venue360</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_view_registrations.css') }}">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Venue<span>360</span></div>
+    <a href="{{ url_for('admin_dashboard') }}">Home</a>
+    <a href="{{ url_for('add_event') }}">Add Event</a>
+    <a href="{{ url_for('manage_events') }}">Manage Events</a>
+    <a href="{{ url_for('view_registrations') }}" class="active">View Registrations</a>
+    <a href="{{ url_for('index') }}">Logout</a>
+</nav>
+
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>Event Registrations</h1>
+        <p>Students registered in events</p>
+    </div>
+
+    <!-- FILTER -->
+    <form method="get" class="filter-section">
+        <label>Select Event</label>
+        <select name="event_id" onchange="this.form.submit()">
+            <option value="">All Events</option>
+            {% for event in events %}
+                <option value="{{ event.id }}"
+                    {% if selected_event == event.id %}selected{% endif %}>
+                    {{ event.title }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student Name</th>
+                    <th>Student ID</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Email</th>
+                    <th>Event</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% if registrations %}
+                    {% for reg in registrations %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ reg.student_name }}</td>
+                        <td>{{ reg.student_id }}</td>
+                        <td>{{ reg.department }}</td>
+                        <td>{{ reg.semester }}</td>
+                        <td>{{ reg.email }}</td>
+                        <td>{{ reg.event_title }}</td>
+                        <td>{{ reg.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="no-data">
+                            No registrations found
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Venue360 | Admin Panel</p>
+</footer>
+
+</body>
+</html>

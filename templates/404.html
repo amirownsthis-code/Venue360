@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}404 Page Not Found - Venue360{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 5rem 1rem;">
+    <h1 style="font-size: 5rem; font-weight: 900; color: var(--accent-rose); line-height: 1;">404</h1>
+    <h2 style="font-size: 1.5rem; font-weight: 700; margin: 1rem 0;">Page Not Found</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">The page or event resource you are looking for does not exist or has been moved.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary"><i class="fa-solid fa-house"></i> Return to Homepage</a>
+</div>
+{% endblock %}

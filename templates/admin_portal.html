@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Workspace - Venue360{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1 style="font-size: 2.2rem; font-weight: 900; color: #FFFFFF;">
+            Admin Workspace
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Manage campus events and student registration records.</p>
+    </div>
+
+    <button onclick="openModal('addEventModal')" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Add Event
+    </button>
+</div>
+
+<!-- NETFLIX TABS -->
+<div class="portal-tabs">
+    <button class="tab-btn active" data-tab="manage">
+        <i class="fa-solid fa-calendar-check"></i> Manage Events ({{ events|length }})
+    </button>
+    <button class="tab-btn" data-tab="registrations">
+        <i class="fa-solid fa-users"></i> Registration Rosters
+    </button>
+</div>
+
+<!-- TAB 1: MANAGE EVENTS -->
+<div class="tab-content active" id="tab-manage">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Event Title</th>
+                    <th>Society</th>
+                    <th>Fee Status</th>
+                    <th>Date & Time</th>
+                    <th>Venue</th>
+                    <th>Registrations</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if events %}
+                    {% for event in events %}
+                    <tr>
+                        <td style="color: var(--text-dim); font-weight: 700;">#{{ event.id }}</td>
+                        <td style="font-weight: 800;">{{ event.title }}</td>
+                        <td style="color: var(--text-muted);">{{ event.society }}</td>
+                        <td>
+                            {% if event.fee_type == 'Paid' and event.price != 'Free' %}
+                                <span class="badge badge-paid">PKR {{ event.price }}</span>
+                            {% else %}
+                                <span class="badge badge-free">FREE</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-size: 0.85rem; color: var(--text-muted);">
+                            {{ event.date }} at {{ event.time }}
+                        </td>
+                        <td style="font-size: 0.85rem;">{{ event.venue }}</td>
+                        <td>
+                            <span style="font-weight: 700; color: var(--accent-red);">{{ event.reg_count }} Registered</span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="display: flex; gap: 0.4rem; justify-content: flex-end;">
+                                <button onclick="openEditModal({{ event|tojson }})" class="btn btn-secondary btn-sm">
+                                    Edit
+                                </button>
+                                <form action="{{ url_for('delete_event', event_id=event.id) }}" method="POST" onsubmit="return confirm('Delete event?')">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">No events listed.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAB 2: REGISTRATIONS EXPLORER -->
+<div class="tab-content" id="tab-registrations">
+    <!-- Filter Form -->
+    <form method="GET" action="{{ url_for('admin_portal') }}" class="filter-bar">
+        <input type="hidden" name="tab" value="registrations">
+        <div style="flex: 1;">
+            <input type="text" name="q" value="{{ search_q or '' }}" class="form-control" placeholder="Search student name, ID, email, event title...">
+        </div>
+        <div style="min-width: 200px;">
+            <select name="event_id" class="form-control" onchange="this.form.submit()">
+                <option value="">-- All Events --</option>
+                {% for e in events %}
+                    <option value="{{ e.id }}" {% if selected_event == e.id %}selected{% endif %}>{{ e.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+        {% if search_q or selected_event %}
+            <a href="{{ url_for('admin_portal') }}?tab=registrations" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student Name</th>
+                    <th>Student ID</th>
+                    <th>Department</th>
+                    <th>Email</th>
+                    <th>Registered Event</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if registrations %}
+                    {% for reg in registrations %}
+                    <tr>
+                        <td style="color: var(--text-dim);">{{ loop.index }}</td>
+                        <td style="font-weight: 700;">{{ reg.student_name }}</td>
+                        <td style="font-family: monospace; color: var(--text-muted);">{{ reg.student_id }}</td>
+                        <td>{{ reg.department }}</td>
+                        <td>{{ reg.email }}</td>
+                        <td style="color: var(--accent-red); font-weight: 700;">{{ reg.event_title }}</td>
+                        <td style="font-size: 0.8rem; color: var(--text-muted);">{{ reg.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem;">No registration records found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="modal-overlay" id="addEventModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 class="modal-title">Add Event</h3>
+            <button class="modal-close" onclick="closeModal('addEventModal')">&times;</button>
+        </div>
+        <form action="{{ url_for('add_event') }}" method="POST">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label">Event Title *</label>
+                    <input type="text" name="title" class="form-control" placeholder="e.g. Hackathon 2026" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Organizing Society *</label>
+                    <input type="text" name="society" class="form-control" placeholder="e.g. ACM Chapter" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="type" class="form-control" placeholder="e.g. Workshop" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date *</label>
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time *</label>
+                    <input type="time" name="time" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Entry Fee Type</label>
+                    <select name="fee_type" class="form-control" id="addFeeType" onchange="togglePriceField('add')">
+                        <option value="Free">Free</option>
+                        <option value="Paid">Paid</option>
+                    </select>
+                </div>
+                <div class="form-group" id="addPriceGroup" style="display: none;">
+                    <label class="form-label">Price (PKR)</label>
+                    <input type="text" name="price" class="form-control" placeholder="e.g. 500">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Cover Image</label>
+                    <select name="image" class="form-control">
+                        <option value="club.jpeg">Club / Event Night (club.jpeg)</option>
+                        <option value="laser.jpeg">Laser / Tech Stage (laser.jpeg)</option>
+                        <option value="cafe.jpeg">Cafe / Casual Gathering (cafe.jpeg)</option>
+                        <option value="pinkish.jpeg">Vibrant Stage (pinkish.jpeg)</option>
+                        <option value="wrap.jpeg">Seminar Banner (wrap.jpeg)</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Venue Location *</label>
+                    <input type="text" name="venue" class="form-control" placeholder="e.g. Main Auditorium" required>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Event Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Describe the event details..." required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Google Form Link</label>
+                    <input type="url" name="google_form_link" class="form-control" placeholder="https://forms.gle/..." required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                Publish Event
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- EDIT EVENT MODAL -->
+<div class="modal-overlay" id="editEventModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Event</h3>
+            <button class="modal-close" onclick="closeModal('editEventModal')">&times;</button>
+        </div>
+        <form id="editEventForm" method="POST">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label">Event Title</label>
+                    <input type="text" name="title" id="editTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Society</label>
+                    <input type="text" name="society" id="editSociety" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="type" id="editType" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" id="editDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time</label>
+                    <input type="time" name="time" id="editTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Entry Fee Type</label>
+                    <select name="fee_type" id="editFeeType" class="form-control" onchange="togglePriceField('edit')">
+                        <option value="Free">Free</option>
+                        <option value="Paid">Paid</option>
+                    </select>
+                </div>
+                <div class="form-group" id="editPriceGroup" style="display: none;">
+                    <label class="form-label">Price (PKR)</label>
+                    <input type="text" name="price" id="editPrice" class="form-control" placeholder="e.g. 500">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Cover Image</label>
+                    <select name="image" id="editImage" class="form-control">
+                        <option value="club.jpeg">Club / Event Night (club.jpeg)</option>
+                        <option value="laser.jpeg">Laser / Tech Stage (laser.jpeg)</option>
+                        <option value="cafe.jpeg">Cafe / Casual Gathering (cafe.jpeg)</option>
+                        <option value="pinkish.jpeg">Vibrant Stage (pinkish.jpeg)</option>
+                        <option value="wrap.jpeg">Seminar Banner (wrap.jpeg)</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Venue</label>
+                    <input type="text" name="venue" id="editVenue" class="form-control" required>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" id="editDescription" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Google Form Link</label>
+                    <input type="url" name="google_form_link" id="editGoogleFormLink" class="form-control" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function togglePriceField(prefix) {
+        const feeType = document.getElementById(prefix + 'FeeType').value;
+        const priceGroup = document.getElementById(prefix + 'PriceGroup');
+        if (feeType === 'Paid') {
+            priceGroup.style.display = 'block';
+        } else {
+            priceGroup.style.display = 'none';
+        }
+    }
+
+    function openEditModal(eventData) {
+        document.getElementById('editEventForm').action = "/admin/edit-event/" + eventData.id;
+        document.getElementById('editTitle').value = eventData.title || '';
+        document.getElementById('editSociety').value = eventData.society || '';
+        document.getElementById('editType').value = eventData.type || '';
+        document.getElementById('editDate').value = eventData.date || '';
+        document.getElementById('editTime').value = eventData.time || '';
+        document.getElementById('editVenue').value = eventData.venue || '';
+        document.getElementById('editFeeType').value = eventData.fee_type || 'Free';
+        document.getElementById('editPrice').value = eventData.price || '';
+        document.getElementById('editImage').value = eventData.image || 'club.jpeg';
+        document.getElementById('editDescription').value = eventData.description || '';
+        document.getElementById('editGoogleFormLink').value = eventData.google_form_link || '';
+
+        togglePriceField('edit');
+        openModal('editEventModal');
+    }
+</script>
+
+{% endblock %}

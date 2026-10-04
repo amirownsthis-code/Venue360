@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Venue360 - University Events{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Netflix Theme Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NETFLIX NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="brand-logo">
+                VENUE<span>360</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('about_us') }}" class="nav-link {% if request.endpoint == 'about_us' %}active{% endif %}">About Us</a></li>
+
+                {% if session.get('student_id') %}
+                    <li><a href="{{ url_for('student_portal') }}" class="nav-link {% if request.endpoint == 'student_portal' %}active{% endif %}">My Events</a></li>
+                    <li>
+                        <div class="user-badge">
+                            <div class="user-avatar">{{ session.get('student_name', 'S')[0].upper() }}</div>
+                            <span>{{ session.get('student_name') }}</span>
+                        </div>
+                    </li>
+                    <li><a href="{{ url_for('logout') }}" class="btn btn-secondary btn-sm">Logout</a></li>
+                {% elif session.get('admin_id') %}
+                    <li><a href="{{ url_for('admin_portal') }}" class="nav-link {% if request.endpoint == 'admin_portal' %}active{% endif %}">Admin Workspace</a></li>
+                    <li>
+                        <div class="user-badge" style="border-color: var(--accent-red);">
+                            <div class="user-avatar"><i class="fa-solid fa-user-gear"></i></div>
+                            <span>Admin</span>
+                        </div>
+                    </li>
+                    <li><a href="{{ url_for('logout') }}" class="btn btn-secondary btn-sm">Logout</a></li>
+                {% else %}
+                    <li>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('authModal')">
+                            Sign In
+                        </button>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="toast-container">
+          {% for category, message in messages %}
+            <div class="toast {{ category }}">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--accent-red);"></i>
+                    <span>{{ message }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- MAIN WRAPPER -->
+    <main class="main-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- EVENT DETAILS POPUP MODAL -->
+    <div class="modal-overlay" id="eventDetailsModal">
+        <div class="modal-box" style="max-width: 600px; padding: 0; overflow: hidden;">
+            <div id="modalEventPoster" style="height: 200px; background-size: cover; background-position: center; position: relative;">
+                <button class="modal-close" onclick="closeModal('eventDetailsModal')" style="position: absolute; top: 12px; right: 16px; background: rgba(0,0,0,0.7); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">&times;</button>
+            </div>
+            <div style="padding: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                    <span id="modalEventPrice" class="badge badge-free">FREE</span>
+                    <span id="modalEventCategory" class="badge badge-society">Workshop</span>
+                </div>
+
+                <h2 id="modalEventTitle" style="font-size: 1.6rem; font-weight: 900; color: #FFFFFF; margin-bottom: 0.25rem;">Event Title</h2>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Organized by <strong id="modalEventSociety" style="color: white;">Society</strong>
+                </div>
+
+                <div class="event-meta" style="background: #000000; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.25rem;">
+                    <div class="event-meta-item">
+                        <i class="fa-regular fa-calendar" style="color: var(--accent-red);"></i>
+                        <span id="modalEventDateTime">Date & Time</span>
+                    </div>
+                    <div class="event-meta-item">
+                        <i class="fa-solid fa-location-dot" style="color: var(--accent-red);"></i>
+                        <span id="modalEventVenue">Venue</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.4rem;">Description</h4>
+                    <p id="modalEventDescription" style="color: #E5E5E5; font-size: 0.95rem; line-height: 1.6;"></p>
+                </div>
+
+                <div id="modalEventActionContainer">
+                    <!-- Dynamic action button rendered via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UNIFIED SINGLE AUTHENTICATION MODAL -->
+    {% if not session.get('student_id') and not session.get('admin_id') %}
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="authModalTitle">Sign In</h3>
+                <button class="modal-close" onclick="closeModal('authModal')">&times;</button>
+            </div>
+
+            <!-- Unified Single Login Form -->
+            <div id="loginFormContainer">
+                <form action="{{ url_for('unified_login') }}" method="POST">
+                    <div class="form-group" style="margin-bottom: 1.2rem;">
+                        <label class="form-label">Username or Email</label>
+                        <input type="text" name="username" class="form-control" placeholder="Enter your username or email" required autofocus>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.8rem;">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1rem;">Sign In</button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    New to Venue360? <a href="javascript:void(0)" onclick="toggleAuthMode('register')" style="color: white; font-weight: 700;">Sign Up Now</a>
+                </div>
+            </div>
+
+            <!-- Student Registration Form -->
+            <div id="registerFormContainer" style="display: none;">
+                <form action="{{ url_for('student_register') }}" method="POST">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Username *</label>
+                            <input type="text" name="username" class="form-control" placeholder="e.g. jdoe" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" name="email" class="form-control" placeholder="student@uet.edu.pk" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password *</label>
+                            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password *</label>
+                            <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Department</label>
+                            <input type="text" name="department" class="form-control" placeholder="e.g. Computer Science">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Student ID Roll No</label>
+                            <input type="text" name="student_id" class="form-control" placeholder="e.g. 2024-CS-101">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 0.8rem;"><i class="fa-solid fa-user-plus"></i> Create Account</button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('login')" style="color: white; font-weight: 700;">Sign In</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleAuthMode(mode) {
+            const loginForm = document.getElementById('loginFormContainer');
+            const regForm = document.getElementById('registerFormContainer');
+            const title = document.getElementById('authModalTitle');
+
+            if (mode === 'register') {
+                loginForm.style.display = 'none';
+                regForm.style.display = 'block';
+                title.innerText = 'Sign Up';
+            } else {
+                loginForm.style.display = 'block';
+                regForm.style.display = 'none';
+                title.innerText = 'Sign In';
+            }
+        }
+    </script>
+    {% endif %}
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="brand-logo" style="justify-content: center; font-size: 1.5rem; margin-bottom: 0.5rem;">
+            VENUE<span>360</span>
+        </div>
+        <p>© {{ current_year }} Venue360. All rights reserved.</p>
+    </footer>
+
+    <!-- Master JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

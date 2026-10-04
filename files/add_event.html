@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Event | Admin - Venue360</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_event.css') }}">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Venue<span>360</span></div>
+    <div class="nav-links">
+    <a href="{{ url_for('admin_dashboard') }}">Home</a>
+    <a href="{{ url_for('add_event') }}" class="active">Add Event</a>
+    <a href="{{ url_for('manage_events') }}">Manage Events</a>
+    <a href="{{ url_for('admin_view_registrations') }}">View Registrations</a>
+    <a href="{{ url_for('index') }}">Logout</a>
+    </div>
+</nav>
+
+<!-- HERO / PAGE WRAPPER -->
+<div class="hero">
+    <div class="form-container">
+        <h1>Add New Event</h1>
+        <p>Fill in the details below to create a new event</p>
+
+        <form method="POST" action="/add_event">
+            <div class="form-grid">
+
+                <div>
+                    <label>Event Title</label>
+                    <input type="text" name="title" placeholder="e.g. Sports Gala 2025" required>
+                </div>
+
+                <div>
+                    <label>Organizing Society</label>
+                    <input type="text" name="society" placeholder="e.g. Sports Society / New Club" required>
+                </div>
+
+                <div>
+                    <label>Event Date</label>
+                    <input type="date" name="date" required>
+                </div>
+
+                <div>
+                    <label>Event Time</label>
+                    <input type="time" name="time" required>
+                </div>
+
+                <div>
+                    <label>Venue</label>
+                    <input type="text" name="venue" placeholder="e.g. Main Auditorium" required>
+                </div>
+
+                <div>
+                    <label>Event Type</label>
+                    <input type="text" name="type" placeholder="e.g. Workshop / Seminar" required>
+                </div>
+
+                <div class="full-width">
+                    <label>Event Description</label>
+                    <textarea name="description" placeholder="Write event details here..." required></textarea>
+                </div>
+
+                <div class="full-width">
+                    <label>Google Form Registration Link</label>
+                    <input type="url" name="google_form_link" placeholder="https://docs.google.com/forms/..." required>
+                </div>
+
+                <div class="full-width center">
+                    <button type="submit">Add Event</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

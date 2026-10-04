@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venue360 - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">Venue<span>360</span></div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="active">Home</a>
+            <a href="{{ url_for('about_us') }}">About Us</a>
+            <a href="{{ url_for('admin_login') }}">Admin Login</a>
+            <a href="{{ url_for('student_login') }}"class="login-btn">Login/Register</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Venue<span>360</span></h1>
+            <p>Explore university events and clubs, all in one place!</p>
+        </div>
+    </header>
+
+    <!-- FEATURES / CARDS SECTION -->
+    <section class="features">
+        <div class="card">
+            <div class="card-icon">🎉</div>
+            <h3>Explore Events</h3>
+            <p>Discover all upcoming university events and seminars in one place. Never miss a fun or educational activity!</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🤝</div>
+            <h3>Join Clubs</h3>
+            <p>Connect with student societies and clubs. Participate in activities, workshops, and social events.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">📝</div>
+            <h3>Personalized Dashboard</h3>
+            <p>Track your registered events, manage your profile, and stay updated with everything happening around campus.</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2025 Venue360. All rights reserved.</p>
+        <p>Home | Events | Clubs | About Us | Profile | Login/Register</p>
+    </footer>
+</body>
+</html>

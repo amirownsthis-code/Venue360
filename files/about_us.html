@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Venue360</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about_us.css') }}">
+
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<header>
+    <a href="#" class="logo"> <span>Venue</span>360</a>
+    <nav>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('about_us') }}" class="active">About Us</a>
+    <a href="{{ url_for('admin_login')}}">Admin login</a>
+    <a href="{{ url_for('student_login') }}">Login/Register</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>About Venue<span class="num">360</span></h1>
+
+    <div class="section-title">What Venue<span class="num">360</span> Is</div>
+    <p>
+        Venue360 is a platform made to organize and streamline 
+        university events in a easy way. It gives students one place to explore everything 
+        happening on campus.
+    </p>
+
+    <div class="section-title">Why It Was Created</div>
+    <p>
+        Venue360 was created to solve the issue of scattered event details and missing information. 
+        Students often miss events because the information is not easily accessible, so Venue360 
+        brings it all into a single system.
+    </p>
+
+    <div class="section-title">What It Helps Students Do</div>
+    <p>
+        Venue360 helps students discover upcoming events, and stay updated with 
+        university announcements. It makes participation simple and improves communication across campus.
+    </p>
+</div>
+
+<footer>
+    © <span id="year"></span> Venue360 — All Rights Reserved
+</footer>
+
+</body>
+</html>

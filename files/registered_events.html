@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Registrations | Venue360</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/registered_events.css') }}">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div class="logo">Venue<span>360</span></div>
+        <a href="{{ url_for('student_dashboard') }}" >Home</a>
+        <a href="{{ url_for('view_events') }}">View Events</a>
+        <a href="{{ url_for('registered_events') }}" class="active">Registered Events</a>
+        <a href="{{ url_for('index') }}">Logout</a>
+
+</nav>
+
+<!-- REGISTERED EVENTS -->
+<section class="section">
+    <div class="section-header">
+        <h2>My Registered Events</h2>
+        <p>Events you have successfully registered for</p>
+    </div>
+
+    <div class="events-grid">
+        {% for event in registered_events %}
+        <div class="event-card">
+            <h3>{{ event.title }}</h3>
+            <p>{{ event.society }}</p>
+            <p>{{ event.date }}</p>
+            <div class="status">Registered</div>
+            <a href="{{ event.google_form_link }}" target="_blank">
+                <button>View / Register</button>
+            </a>
+        </div>
+        {% else %}
+        <p style="grid-column: 1/-1; text-align: center; color:#ccc;">No registered events found.</p>
+        {% endfor %}
+    </div>
+</section>
+
+</body>
+</html>
