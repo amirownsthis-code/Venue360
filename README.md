@@ -108,3 +108,13 @@ This is an academic prototype intended for local demonstration. It uses JSON-fil
 - [Flask installation and dependencies](https://flask.palletsprojects.com/en/stable/installation/)
 - [Flask configuration and session secrets](https://flask.palletsprojects.com/en/stable/config/)
 
+## Screenshots
+
+### Homepage
+![Homepage](docs/screenshots/homepage.png)
+
+### Student Portal
+![Student Portal](docs/screenshots/student-portal.png)
+
+### Admin Portal
+![Admin Portal](docs/screenshots/admin-portal.png)
