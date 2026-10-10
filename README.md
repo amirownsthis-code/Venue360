@@ -45,6 +45,19 @@ The application renders these files from **templates/**:
 - `404.html`
 - `500.html`
 
+## Academic Documentation
+
+[View the original semester project report](docs/academic-report.pdf)
+
+This report documents the original academic version of Venue360.
+Some screenshots, planned technologies, and workflows differ from
+the current repository. See this README for current setup and features.
+
+## My Contribution
+
+This was a team academic project. My contribution focused on
+frontend design, feature planning, and the website's user flow.
+
 ## Run locally on Windows / PowerShell
 
 Use Python 3.9 or newer. Run these commands from the project root.
