@@ -21,3 +21,7 @@ __pycache__/
 Thumbs.db
 .DS_Store
 
+/console/users.json
+/console/events.json
+/console/registrations.json
+/console/system_log.txt

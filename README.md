@@ -131,3 +131,9 @@ This is an academic prototype intended for local demonstration. It uses JSON-fil
 
 ### Admin Portal
 ![Admin Portal](docs/screenshots/admin-portal.png)
+
+## Console Version
+
+The standalone Programming Fundamentals implementation is available
+in [console/](console/README.md). It runs independently of the Flask
+web application and uses separate local JSON files.
